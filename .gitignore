@@ -1,0 +1,10 @@
+venv/
+media/
+static/
+*.py[c]
+medicalhistory/migrations/*.py
+core/migrations/*.py
+!*/migrations/init.py
+db.sqlite3
+*.pyc
+*.pyo

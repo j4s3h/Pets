@@ -4,6 +4,7 @@ from .serializers import MedicalHistorySerializers, DetailMedicalHistorySerializ
 from django.shortcuts import get_object_or_404
 from pet.models import Pet
 from rest_framework.response import Response
+from rest_framework import status
 class ListMedicalHistoryViews(generics.ListAPIView):
     queryset = MedicalHistory.objects.all()
     serializer_class = MedicalHistorySerializers
@@ -16,6 +17,16 @@ class CreateMedicalHistoryViews(generics.CreateAPIView):
     queryset = MedicalHistory.objects.all()
     serializer_class = DetailMedicalHistorySerializer
 
+    def post(self, request, pet_id):
+        pet_instance = get_object_or_404(Pet, id=pet_id)
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(pet=pet_instance)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class LandingPage(generics.RetrieveAPIView):
     serializer_class = LandingPageSerializer
 
